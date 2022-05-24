@@ -3,9 +3,9 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-// var nodemailer = require("nodemailer");
-// const mg = require("nodemailer-mailgun-transport");
-// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+var nodemailer = require("nodemailer");
+const mg = require("nodemailer-mailgun-transport");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -32,6 +32,42 @@ async function run() {
       .db("bicycle_manufacturer")
       .collection("order");
     const userCollection = client.db("bicycle_manufacturer").collection("user");
+    const paymentCollection = client
+      .db("bicycle_manufacturer")
+      .collection("payments");
+
+    // post payment db
+    app.post("/create-payment-intent", async (req, res) => {
+      const service = req.body;
+      const price = service.totalprice;
+      const amount = price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+      res.send({ clientSecret: paymentIntent.client_secret });
+    });
+
+    // update payment history
+    app.patch("/order/:id", async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          paid: true,
+          transactionId: payment.transactionId,
+        },
+      };
+
+      const result = await paymentCollection.insertOne(payment);
+      const updatedorder = await orderCollection.updateOne(
+        filter,
+        updatedDoc
+      );
+      res.send(updatedorder);
+    });
 
     //load data part API-----
     app.get("/part", async (req, res) => {
@@ -76,10 +112,18 @@ async function run() {
 
     //My Order load
     app.get("/order", async (req, res) => {
-        const orderEmail = req.query.orderEmail;
-        const query = { email: orderEmail };
-        const orders = await orderCollection.find(query).toArray();
-        res.send(orders);
+      const orderEmail = req.query.orderEmail;
+      const query = { email: orderEmail };
+      const orders = await orderCollection.find(query).toArray();
+      res.send(orders);
+    });
+
+    // load payment order id db
+    app.get("/order/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const order = await orderCollection.findOne(query);
+      res.send(order);
     });
   } finally {
   }
