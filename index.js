@@ -36,18 +36,7 @@ async function run() {
       .db("bicycle_manufacturer")
       .collection("payments");
 
-    // post payment db
-    app.post("/create-payment-intent", async (req, res) => {
-      const service = req.body;
-      const price = service.totalprice;
-      const amount = price * 100;
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount,
-        currency: "usd",
-        payment_method_types: ["card"],
-      });
-      res.send({ clientSecret: paymentIntent.client_secret });
-    });
+
 
     // update payment history
     app.patch("/order/:id", async (req, res) => {
@@ -62,14 +51,11 @@ async function run() {
       };
 
       const result = await paymentCollection.insertOne(payment);
-      const updatedorder = await orderCollection.updateOne(
-        filter,
-        updatedDoc
-      );
+      const updatedorder = await orderCollection.updateOne(filter, updatedDoc);
       res.send(updatedorder);
     });
 
-    //load data part API-----
+    //load data part API-----done
     app.get("/part", async (req, res) => {
       const query = {};
       const cursor = partCollection.find(query);
@@ -77,7 +63,7 @@ async function run() {
       res.send(part);
     });
 
-    //load inventory details
+    //load inventory details-done
     app.get("/part/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -92,7 +78,7 @@ async function run() {
       res.send(result);
     });
 
-    // User Creation and update accesstoken
+    // User Creation and update accesstoken-done
     app.put("/user/:email", async (req, res) => {
       const email = req.params.email;
       const user = req.body;
@@ -110,7 +96,7 @@ async function run() {
       res.send({ result, token });
     });
 
-    //My Order load
+    //My Order load-done
     app.get("/order", async (req, res) => {
       const orderEmail = req.query.orderEmail;
       const query = { email: orderEmail };
@@ -118,7 +104,7 @@ async function run() {
       res.send(orders);
     });
 
-    // load payment order id db
+    // load payment order id db-done
     app.get("/order/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
