@@ -28,6 +28,9 @@ async function run() {
     await client.connect();
     console.log("sdfsds");
     const partCollection = client.db("bicycle_manufacturer").collection("part");
+    const reviewCollection = client
+      .db("bicycle_manufacturer")
+      .collection("review");
     const orderCollection = client
       .db("bicycle_manufacturer")
       .collection("order");
@@ -36,9 +39,20 @@ async function run() {
       .db("bicycle_manufacturer")
       .collection("payments");
 
+    // post payment db
+    app.post("/create-payment-intent", async (req, res) => {
+      const service = req.body;
+      const price = service.totalprice;
+      const amount = price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      });
+      res.send({ clientSecret: paymentIntent.client_secret });
+    });
 
-
-    // update payment history
+    // update payment history-done
     app.patch("/order/:id", async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
@@ -110,6 +124,29 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const order = await orderCollection.findOne(query);
       res.send(order);
+    });
+
+    // DELETE order----
+    app.delete("/order/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // Add a review  upload db----
+    app.post("/review", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    //load data part API-----done
+    app.get("/review", async (req, res) => {
+      const query = {};
+      const cursor = reviewCollection.find(query);
+      const part = await cursor.toArray();
+      res.send(part);
     });
   } finally {
   }
