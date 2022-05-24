@@ -211,7 +211,7 @@ async function run() {
     //   }
     // });
 
-    // User Creation and update
+    // User Creation and update---------------------------------
     //     app.put("/user/:email", async (req, res) => {
     //       const email = req.params.email;
     //       const user = req.body;
@@ -273,7 +273,7 @@ async function run() {
     //      * app.delete('/booking/:id) //
     //      */
 
-    //     //my appoinment
+    //my appoinment---------------------------
     //     app.get("/booking", verifyJWT, async (req, res) => {
     //       const patientEmail = req.query.patientEmail;
     //       const decodedEmail = req.decoded.email;

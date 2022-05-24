@@ -73,6 +73,14 @@ async function run() {
       );
       res.send({ result, token });
     });
+
+    //My Order load
+    app.get("/order", async (req, res) => {
+        const orderEmail = req.query.orderEmail;
+        const query = { email: orderEmail };
+        const orders = await orderCollection.find(query).toArray();
+        res.send(orders);
+    });
   } finally {
   }
 }
