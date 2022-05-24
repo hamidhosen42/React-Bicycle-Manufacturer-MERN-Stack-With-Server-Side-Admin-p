@@ -28,6 +28,9 @@ async function run() {
     await client.connect();
     console.log("sdfsds");
     const partCollection = client.db("bicycle_manufacturer").collection("part");
+    const orderCollection = client
+      .db("bicycle_manufacturer")
+      .collection("order");
 
     //load data part API-----
     app.get("/part", async (req, res) => {
@@ -43,6 +46,13 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const part = await partCollection.findOne(query);
       res.send(part);
+    });
+
+    // order part
+    app.post("/order", async (req, res) => {
+      const doctor = req.body;
+      const result = await orderCollection.insertOne(doctor);
+      res.send(result);
     });
   } finally {
   }

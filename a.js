@@ -311,7 +311,7 @@ async function run() {
     //       return res.send({ success: true, result });
     //     });
 
-    //     // update payment history
+        // update payment history
     //     app.patch("/booking/:id", verifyJWT, async (req, res) => {
     //       const id = req.params.id;
     //       const payment = req.body;
