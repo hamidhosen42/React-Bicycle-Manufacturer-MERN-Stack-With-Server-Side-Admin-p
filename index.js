@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 // var nodemailer = require("nodemailer");
@@ -16,31 +16,31 @@ app.use(express.json());
 
 // require('crypto').randomBytes(64).toString('hex')
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.dilsw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aqmpm.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
 
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-
-  console.log("sdfsds");
-  // perform actions on the collection object
-  client.close();
-});
-
 async function run() {
   try {
     await client.connect();
     console.log("sdfsds");
+    const partCollection = client.db("bicycle_manufacturer").collection("part");
 
+    //load data part API-----
+    app.get("/part", async (req, res) => {
+      const query = {};
+      const cursor = partCollection.find(query);
+      const part = await cursor.limit(6).toArray();
+      res.send(part);
+    });
   } finally {
   }
 }
 
-// run().catch(console.dir);
+run().catch(console.dir);
 
 app.get("/", (req, res) => {
   res.send("Hello From bicycle!");
