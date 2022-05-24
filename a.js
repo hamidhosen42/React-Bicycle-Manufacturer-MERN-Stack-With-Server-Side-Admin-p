@@ -191,26 +191,27 @@ async function run() {
     //       const result = await userCollection.updateOne(filter, updateDoc);
     //       res.send(result);
     //     });
-    //     // app.put("/user/admin/:email", verifyJWT, async (req, res) => {
-    //     //   const email = req.params.email;
-    //     //   const requester = req.decoded.email;
-    //     //   const requesterAccount = await userCollection.findOne({
-    //     //     email: requester,
-    //     //   });
 
-    //     //   if (requesterAccount.role === "admin") {
-    //     //     const filter = { email: email };
-    //     //     const updateDoc = {
-    //     //       $set: { role: "admin" },
-    //     //     };
-    //     //     const result = await userCollection.updateOne(filter, updateDoc);
-    //     //     res.send(result);
-    //     //   } else {
-    //     //     res.status(403).send({ message: "forbidden" });
-    //     //   }
-    //     // });
+    // app.put("/user/admin/:email", verifyJWT, async (req, res) => {
+    //   const email = req.params.email;
+    //   const requester = req.decoded.email;
+    //   const requesterAccount = await userCollection.findOne({
+    //     email: requester,
+    //   });
 
-    //     // User Creation and update
+    //   if (requesterAccount.role === "admin") {
+    //     const filter = { email: email };
+    //     const updateDoc = {
+    //       $set: { role: "admin" },
+    //     };
+    //     const result = await userCollection.updateOne(filter, updateDoc);
+    //     res.send(result);
+    //   } else {
+    //     res.status(403).send({ message: "forbidden" });
+    //   }
+    // });
+
+    // User Creation and update
     //     app.put("/user/:email", async (req, res) => {
     //       const email = req.params.email;
     //       const user = req.body;
@@ -311,7 +312,7 @@ async function run() {
     //       return res.send({ success: true, result });
     //     });
 
-        // update payment history
+    // update payment history
     //     app.patch("/booking/:id", verifyJWT, async (req, res) => {
     //       const id = req.params.id;
     //       const payment = req.body;
@@ -337,7 +338,7 @@ async function run() {
     //       res.send(doctors);
     //     });
 
-    //     // Adddoctors detail upload db
+    // Adddoctors detail upload db------------------
     //     app.post("/doctor", verifyJWT, verifyAdmin, async (req, res) => {
     //       const doctor = req.body;
     //       const result = await doctorCollection.insertOne(doctor);
