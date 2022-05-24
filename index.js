@@ -36,6 +36,14 @@ async function run() {
       const part = await cursor.limit(6).toArray();
       res.send(part);
     });
+
+    //load inventory details
+    app.get("/part/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const part = await partCollection.findOne(query);
+      res.send(part);
+    });
   } finally {
   }
 }
