@@ -39,7 +39,7 @@ async function run() {
       .db("bicycle_manufacturer")
       .collection("payments");
 
-    // make addmin then add a user
+    // make addmin then add a user-done
     const verifyAdmin = async (req, res, next) => {
       const requester = req.decoded.email;
       const requesterAccount = await userCollection.findOne({
@@ -51,6 +51,8 @@ async function run() {
         res.status(403).send({ message: "forbidden" });
       }
     };
+
+    // ----------admin secrion------------
 
     // load all user
     app.get("/user", async (req, res) => {
@@ -85,6 +87,8 @@ async function run() {
       res.send(result);
     });
 
+    // ----------payment section----------
+
     // post payment db -done
     app.post("/create-payment-intent", async (req, res) => {
       const service = req.body;
@@ -115,28 +119,7 @@ async function run() {
       res.send(updatedorder);
     });
 
-    //load data part API-----done
-    app.get("/part", async (req, res) => {
-      const query = {};
-      const cursor = partCollection.find(query);
-      const part = await cursor.limit(6).toArray();
-      res.send(part);
-    });
-
-    //load inventory details-done
-    app.get("/part/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const part = await partCollection.findOne(query);
-      res.send(part);
-    });
-
-    // order part
-    app.post("/order", async (req, res) => {
-      const doctor = req.body;
-      const result = await orderCollection.insertOne(doctor);
-      res.send(result);
-    });
+    // -----------------user section---------------
 
     // User Creation and update accesstoken-done
     app.put("/user/:email", async (req, res) => {
@@ -154,6 +137,15 @@ async function run() {
         { expiresIn: "1h" }
       );
       res.send({ result, token });
+    });
+
+    // ----------------order section-----------
+
+    // order part
+    app.post("/order", async (req, res) => {
+      const orders = req.body;
+      const result = await orderCollection.insertOne(orders);
+      res.send(result);
     });
 
     //My Order load-done
@@ -180,6 +172,8 @@ async function run() {
       res.send(result);
     });
 
+    // --------------review section--------------
+
     // Add a review  upload db----
     app.post("/review", async (req, res) => {
       const review = req.body;
@@ -193,6 +187,68 @@ async function run() {
       const cursor = reviewCollection.find(query);
       const part = await cursor.toArray();
       res.send(part);
+    });
+
+    // ------------profile section -------
+
+    // update user profile
+    app.put("/profile/:email", async (req, res) => {
+      const email = req.params.email;
+      const profileUser = req.body;
+      const options = { upsert: true };
+      const filter = { email: email };
+      const updateDoc = {
+        $set: {
+          displayName: profileUser.displayName,
+          email: profileUser.email,
+          education: profileUser.education,
+          address: profileUser.address,
+          number: profileUser.number,
+          linkdin: profileUser.linkdin,
+        },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
+
+    // load  user profile
+    app.get("/profile/:email", async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      res.send(user);
+    });
+
+    // ------parts item-----------
+
+    //load data part API-----done
+    app.get("/part", async (req, res) => {
+      const query = {};
+      const cursor = partCollection.find(query);
+      const part = await cursor.toArray();
+      res.send(part);
+    });
+
+    //load part details-done
+    app.get("/part/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const part = await partCollection.findOne(query);
+      res.send(part);
+    });
+
+    // Add a part  upload db----
+    app.post("/addProduct", async (req, res) => {
+      const parts = req.body;
+      const result = await partCollection.insertOne(parts);
+      res.send(result);
+    });
+
+    // delete parts item
+    app.delete("/part/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await partCollection.deleteOne(query);
+      res.send(result);
     });
   } finally {
   }
