@@ -23,6 +23,21 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+function verifyJWT(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ message: "UnAuthorized access" });
+  }
+  const token = authHeader.split(" ")[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+    if (err) {
+      return res.status(403).send({ message: "Forbidden access" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+}
+
 async function run() {
   try {
     await client.connect();
@@ -102,6 +117,26 @@ async function run() {
       res.send({ clientSecret: paymentIntent.client_secret });
     });
 
+    // update admin panding user payment
+    app.put("/shiped/:id", async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updatedDoc = {
+        $set: {
+          paid: "true",
+          transactionId: payment.transactionId,
+        },
+      };
+      const updatedorder = await orderCollection.updateOne(
+        filter,
+        updatedDoc,
+        options
+      );
+      res.send(updatedorder);
+    });
+
     // update payment history-done
     app.patch("/order/:id", async (req, res) => {
       const id = req.params.id;
@@ -109,7 +144,7 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const updatedDoc = {
         $set: {
-          paid: true,
+          paid: "false",
           transactionId: payment.transactionId,
         },
       };
