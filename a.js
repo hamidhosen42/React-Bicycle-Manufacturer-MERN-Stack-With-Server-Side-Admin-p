@@ -133,7 +133,7 @@ async function run() {
     //        .db("doctors_portal")
     //        .collection("payments");
 
-    //     // make addmin then add doccctor
+    // make addmin then add doccctor-----------------
     //     const verifyAdmin = async (req, res, next) => {
     //       const requester = req.decoded.email;
     //       const requesterAccount = await userCollection.findOne({
@@ -167,13 +167,13 @@ async function run() {
     //       res.send(services);
     //     });
 
-    //     // load all user
+    // load all user-------------------
     //     app.get("/user", verifyJWT, async (req, res) => {
     //       const users = await userCollection.find().toArray();
     //       res.send(users);
     //     });
 
-    //     // load admin user
+    // load admin user------------
     //     app.get("/admin/:email", async (req, res) => {
     //       const email = req.params.email;
     //       const user = await userCollection.findOne({ email: email });
@@ -181,16 +181,16 @@ async function run() {
     //       res.send({ admin: isAdmin });
     //     });
 
-    //     //put admin in db existing email
-    //     app.put("/user/admin/:email", verifyJWT, verifyAdmin, async (req, res) => {
-    //       const email = req.params.email;
-    //       const filter = { email: email };
-    //       const updateDoc = {
-    //         $set: { role: "admin" },
-    //       };
-    //       const result = await userCollection.updateOne(filter, updateDoc);
-    //       res.send(result);
-    //     });
+    //put admin in db existing email
+    // app.put("/user/admin/:email", verifyJWT, verifyAdmin, async (req, res) => {
+    //   const email = req.params.email;
+    //   const filter = { email: email };
+    //   const updateDoc = {
+    //     $set: { role: "admin" },
+    //   };
+    //   const result = await userCollection.updateOne(filter, updateDoc);
+    //   res.send(result);
+    // });
 
     // app.put("/user/admin/:email", verifyJWT, async (req, res) => {
     //   const email = req.params.email;
