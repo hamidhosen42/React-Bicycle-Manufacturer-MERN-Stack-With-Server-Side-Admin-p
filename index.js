@@ -54,13 +54,13 @@ async function run() {
 
     // ----------admin secrion------------
 
-    // load all user
+    // load all user-done
     app.get("/user", async (req, res) => {
       const users = await userCollection.find().toArray();
       res.send(users);
     });
 
-    // load admin user
+    // load admin user-done
     app.get("/admin/:email", async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
@@ -152,6 +152,13 @@ async function run() {
     app.get("/order", async (req, res) => {
       const orderEmail = req.query.orderEmail;
       const query = { email: orderEmail };
+      const orders = await orderCollection.find(query).toArray();
+      res.send(orders);
+    });
+
+    // admin add order load
+    app.get("/orders", async (req, res) => {
+      const query = {};
       const orders = await orderCollection.find(query).toArray();
       res.send(orders);
     });
