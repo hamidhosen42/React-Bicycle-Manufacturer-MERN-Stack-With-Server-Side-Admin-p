@@ -279,7 +279,7 @@ async function run() {
     });
 
     // Add a part  upload db----
-    app.post("/addProduct", async (req, res) => {
+    app.post("/addProduct",verifyJWT, async (req, res) => {
       const parts = req.body;
       const result = await partCollection.insertOne(parts);
       res.send(result);
