@@ -176,8 +176,8 @@ async function run() {
 
     // ----------------order section-----------
 
-    // order part
-    app.post("/order", async (req, res) => {
+    // upload order
+    app.post("/order",verifyJWT, async (req, res) => {
       const orders = req.body;
       const result = await orderCollection.insertOne(orders);
       res.send(result);
