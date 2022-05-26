@@ -125,8 +125,7 @@ async function run() {
       const options = { upsert: true };
       const updatedDoc = {
         $set: {
-          paid: "true",
-          transactionId: payment.transactionId,
+          paid: "true"
         },
       };
       const updatedorder = await orderCollection.updateOne(
@@ -151,7 +150,7 @@ async function run() {
 
       const result = await paymentCollection.insertOne(payment);
       const updatedorder = await orderCollection.updateOne(filter, updatedDoc);
-      res.send(updatedorder);
+      res.send({ updatedorder, result });
     });
 
     // -----------------user section---------------
@@ -177,7 +176,7 @@ async function run() {
     // ----------------order section-----------
 
     // upload order
-    app.post("/order",verifyJWT, async (req, res) => {
+    app.post("/order", verifyJWT, async (req, res) => {
       const orders = req.body;
       const result = await orderCollection.insertOne(orders);
       res.send(result);
@@ -217,7 +216,7 @@ async function run() {
     // --------------review section--------------
 
     // Add a review  upload db----
-    app.post("/review",verifyJWT, async (req, res) => {
+    app.post("/review", verifyJWT, async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
       res.send(result);
@@ -279,7 +278,7 @@ async function run() {
     });
 
     // Add a part  upload db----
-    app.post("/addProduct",verifyJWT, async (req, res) => {
+    app.post("/addProduct", verifyJWT, async (req, res) => {
       const parts = req.body;
       const result = await partCollection.insertOne(parts);
       res.send(result);
