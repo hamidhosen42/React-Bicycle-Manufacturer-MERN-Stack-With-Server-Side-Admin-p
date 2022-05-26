@@ -217,14 +217,14 @@ async function run() {
     // --------------review section--------------
 
     // Add a review  upload db----
-    app.post("/review", async (req, res) => {
+    app.post("/review",verifyJWT, async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
       res.send(result);
     });
 
     //load data part API-----done
-    app.get("/review", async (req, res) => {
+    app.get("/reviews", async (req, res) => {
       const query = {};
       const cursor = reviewCollection.find(query);
       const part = await cursor.toArray();
