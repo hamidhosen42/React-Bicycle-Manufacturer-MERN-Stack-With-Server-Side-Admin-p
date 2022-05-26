@@ -117,7 +117,7 @@ async function run() {
       res.send({ clientSecret: paymentIntent.client_secret });
     });
 
-    // update admin panding user payment
+    // update admin panding user payment than user pay
     app.put("/shiped/:id", async (req, res) => {
       const id = req.params.id;
       const payment = req.body;
@@ -125,7 +125,7 @@ async function run() {
       const options = { upsert: true };
       const updatedDoc = {
         $set: {
-          paid: "true"
+          paid: "true",
         },
       };
       const updatedorder = await orderCollection.updateOne(
