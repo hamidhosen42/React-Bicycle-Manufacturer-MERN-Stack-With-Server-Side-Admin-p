@@ -2,7 +2,7 @@
 manufacturer-website-server-side-hamidhosen42 created by GitHub Classroom
 
 ### Website Name : Bicycle Manufacturer
-### Live Link : Server Link : https://floating-inlet-46757.herokuapp.com/
+### Server Link : https://floating-inlet-46757.herokuapp.com/
 ### Project Live Link : https://bicycle-manufacturer-client.web.app/
 ### Main Features:
 1. Using NodeJs
